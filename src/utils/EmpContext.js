@@ -10,7 +10,9 @@ const EmpContext = React.createContext ({
       { name: "Phone", width: "20%" },
       { name: "Email", width: "20%" },
       { name: "DOB", width: "10%" }
-    ]
+    ],
+    handleSort : () => undefined,
+    handleSearchChange : () => undefined
 });
 
 export default EmpContext;

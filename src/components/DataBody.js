@@ -1,7 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import "../styles/DataBody.css";
+import EmpContext from "../utils/EmpContext"
 
-function DataBody({ users }) {
+
+function DataBody() {
+
+  const employee = useContext(EmpContext);
+
+  console.log("databody", employee);
+
   function formatDate(date) {
     const dateArray = date.split("-");
     const year = dateArray[0];
@@ -14,8 +21,8 @@ function DataBody({ users }) {
 
   return (
     <tbody>
-      {users[0] !== undefined && users[0].name !== undefined ? (
-        users.map(({ login, name, picture, phone, email, dob }) => {
+      {employee.developerState.users[0] !== undefined && employee.developerState.users[0].name !== undefined ? (
+        employee.developerState.users.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
               <td data-th="Image" className="align-middle">

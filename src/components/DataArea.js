@@ -1,9 +1,10 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "./DataTable";
 import Nav from "./Nav";
 import API from "../utils/API";
 import "../styles/DataArea.css";
 import EmpContext from "../utils/EmpContext";
+import { deepStrictEqual } from "assert";
 
 function DataArea() {
   const [developerState, setDeveloperState] = useState({
@@ -21,27 +22,27 @@ function DataArea() {
 
   useEffect(() => {
     API.getUsers().then(results => {
-      this.setState({
-        users: results.data.results,
-        filteredUsers: results.data.results
-      });
+
+      setDeveloperState({...developerState,users : results.data.results, filteredUsers : results.data.results})
+
+      // this.setState({
+      //   users: results.data.results,
+      //   filteredUsers: results.data.results
+      // });
     });
-  }, []);
+    //need to put something in the array
+  }, [developerState.users]);
 
-  function handleSort(heading) {
+  const handleSort = function (heading) {
 
-    if (this.state.order === "descend") {
-      this.setState({
-        order: "ascend"
-      })
+    if (developerState.order === "descend") {
+      setDeveloperState({...developerState, order : "ascend"});
     } else {
-      this.setState({
-        order: "descend"
-      })
+      setDeveloperState({...developerState, order : "descend"});
     }
 
     const compareFnc = (a, b) => {
-      if (this.state.order === "ascend") {
+      if (developerState.order === "ascend") {
         // account for missing values
         if (a[heading] === undefined) {
           return 1;
@@ -70,31 +71,38 @@ function DataArea() {
       }
 
     }
-    const sortedUsers = this.state.filteredUsers.sort(compareFnc);
-    this.setState({ filteredUsers: sortedUsers });
+    //const sortedUsers = this.state.filteredUsers.sort(compareFnc);
+    // this.setState({ filteredUsers: sortedUsers });
 
-    function handleSearchChange(event) {
-      console.log(event.target.value);
+    const sortedUsers = developerState.filteredUsers.sort(compareFnc);
+    setDeveloperState({...developerState,filteredUsers : sortedUsers});
+
+    const handleSearchChange = function (event) {
+      //console.log(event.target.value);
       const filter = event.target.value;
-      const filteredList = this.state.users.filter(item => {
+
+      
+
+      const filteredList = developerState.users.filter(item => {
         // merge data together, then see if user input is anywhere inside
         let values = Object.values(item)
           .join("")
           .toLowerCase();
         return values.indexOf(filter.toLowerCase()) !== -1;
       });
-      this.setState({ filteredUsers: filteredList });
+      setDeveloperState({...developerState,filteredUsers : filteredList})
+      //this.setState({ filteredUsers: filteredList });
     }
   };
+
+
   return (
     <>
-      <EmpContext.Provider value={developerState} >
-        <Nav handleSearchChange={this.state.handleSearchChange} />
+      <EmpContext.Provider value={{developerState, handleSort}} >
+        <Nav />
         <div className="data-area">
           <DataTable
-            headings={this.state.headings}
-            users={this.state.filteredUsers}
-            handleSort={this.state.handleSort}
+            
           />
         </div>
       </EmpContext.Provider>
