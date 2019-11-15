@@ -1,11 +1,11 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import "../styles/DataBody.css";
 import EmpContext from "../utils/EmpContext"
 
 
 function DataBody() {
 
-  const employee = useContext(EmpContext);
+  const { employee } = useContext(EmpContext);
 
   console.log("databody", employee);
 
@@ -21,8 +21,8 @@ function DataBody() {
 
   return (
     <tbody>
-      {employee.developerState.users[0] !== undefined && employee.developerState.users[0].name !== undefined ? (
-        employee.developerState.users.map(({ login, name, picture, phone, email, dob }) => {
+      {employee.users[0] !== undefined && employee.users[0].name !== undefined ? (
+        employee.users.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
               <td data-th="Image" className="align-middle">
@@ -50,8 +50,8 @@ function DataBody() {
           );
         })
       ) : (
-        <></>
-      )}
+          <></>
+        )}
     </tbody>
   );
 }

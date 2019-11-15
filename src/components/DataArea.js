@@ -7,6 +7,7 @@ import EmpContext from "../utils/EmpContext";
 import { deepStrictEqual } from "assert";
 
 function DataArea() {
+  
   const [developerState, setDeveloperState] = useState({
     users: "",
     order: "decend",
@@ -17,72 +18,52 @@ function DataArea() {
       { name: "Phone", width: "20%" },
       { name: "Email", width: "20%" },
       { name: "DOB", width: "10%" }
-    ]
-  });
+    ],
+    handleSort: heading => {
 
-  useEffect(() => {
-    API.getUsers().then(results => {
-
-      setDeveloperState({...developerState,users : results.data.results, filteredUsers : results.data.results})
-
-      // this.setState({
-      //   users: results.data.results,
-      //   filteredUsers: results.data.results
-      // });
-    });
-    //need to put something in the array
-  }, [developerState.users]);
-
-  const handleSort = function (heading) {
-
-    if (developerState.order === "descend") {
-      setDeveloperState({...developerState, order : "ascend"});
-    } else {
-      setDeveloperState({...developerState, order : "descend"});
-    }
-
-    const compareFnc = (a, b) => {
-      if (developerState.order === "ascend") {
-        // account for missing values
-        if (a[heading] === undefined) {
-          return 1;
-        } else if (b[heading] === undefined) {
-          return -1;
-        }
-        // numerically
-        else if (heading === "name") {
-          return a[heading].first.localeCompare(b[heading].first);
-        } else {
-          return a[heading] - b[heading];
-        }
+      if (developerState.order === "descend") {
+        setDeveloperState({...developerState,order : "ascend"})
       } else {
-        // account for missing values
-        if (a[heading] === undefined) {
-          return 1;
-        } else if (b[heading] === undefined) {
-          return -1;
-        }
-        // numerically
-        else if (heading === "name") {
-          return b[heading].first.localeCompare(a[heading].first);
-        } else {
-          return b[heading] - a[heading];
-        }
+        setDeveloperState({...developerState,order : "descend"})
       }
 
-    }
-    //const sortedUsers = this.state.filteredUsers.sort(compareFnc);
-    // this.setState({ filteredUsers: sortedUsers });
+      const compareFnc = (a, b) => {
+        if (developerState.order === "ascend") {
+          // account for missing values
+          if (a[heading] === undefined) {
+            return 1;
+          } else if (b[heading] === undefined) {
+            return -1;
+          }
+          // numerically
+          else if (heading === "name") {
+            return a[heading].first.localeCompare(b[heading].first);
+          } else {
+            return a[heading] - b[heading];
+          }
+        } else {
+          // account for missing values
+          if (a[heading] === undefined) {
+            return 1;
+          } else if (b[heading] === undefined) {
+            return -1;
+          }
+          // numerically
+          else if (heading === "name") {
+            return b[heading].first.localeCompare(a[heading].first);
+          } else {
+            return b[heading] - a[heading];
+          }
+        }
 
-    const sortedUsers = developerState.filteredUsers.sort(compareFnc);
-    setDeveloperState({...developerState,filteredUsers : sortedUsers});
+      }
+      const sortedUsers = developerState.filteredUsers.sort(compareFnc);
+      setDeveloperState({...developerState,filteredUsers : sortedUsers});
+    },
 
-    const handleSearchChange = function (event) {
-      //console.log(event.target.value);
+    handleSearchChange: event => {
+      console.log(event.target.value);
       const filter = event.target.value;
-
-      
-
       const filteredList = developerState.users.filter(item => {
         // merge data together, then see if user input is anywhere inside
         let values = Object.values(item)
@@ -90,15 +71,20 @@ function DataArea() {
           .toLowerCase();
         return values.indexOf(filter.toLowerCase()) !== -1;
       });
-      setDeveloperState({...developerState,filteredUsers : filteredList})
-      //this.setState({ filteredUsers: filteredList });
+      setDeveloperState({...developerState,filteredUsers : filteredList});
     }
-  };
+  });
 
+
+useEffect(() => {
+    API.getUsers().then(results => {
+      setDeveloperState({...developerState,users : results.data.results, filteredUsers : results.data.results})
+    });
+  }, []);
 
   return (
     <>
-      <EmpContext.Provider value={{developerState, handleSort}} >
+      <EmpContext.Provider value={{developerState}} >
         <Nav />
         <div className="data-area">
           <DataTable
@@ -129,65 +115,65 @@ export default DataArea;
 //         { name: "DOB", width: "10%" }
 //       ],
 
-//       handleSort: heading => {
+  //     handleSort: heading => {
 
-//         if (this.state.order === "descend") {
-//           this.setState({
-//             order: "ascend"
-//           })
-//         } else {
-//           this.setState({
-//             order: "descend"
-//           })
-//         }
+  //       if (this.state.order === "descend") {
+  //         this.setState({
+  //           order: "ascend"
+  //         })
+  //       } else {
+  //         this.setState({
+  //           order: "descend"
+  //         })
+  //       }
 
-//         const compareFnc = (a, b) => {
-//           if (this.state.order === "ascend") {
-//             // account for missing values
-//             if (a[heading] === undefined) {
-//               return 1;
-//             } else if (b[heading] === undefined) {
-//               return -1;
-//             }
-//             // numerically
-//             else if (heading === "name") {
-//               return a[heading].first.localeCompare(b[heading].first);
-//             } else {
-//               return a[heading] - b[heading];
-//             }
-//           } else {
-//             // account for missing values
-//             if (a[heading] === undefined) {
-//               return 1;
-//             } else if (b[heading] === undefined) {
-//               return -1;
-//             }
-//             // numerically
-//             else if (heading === "name") {
-//               return b[heading].first.localeCompare(a[heading].first);
-//             } else {
-//               return b[heading] - a[heading];
-//             }
-//           }
+  //       const compareFnc = (a, b) => {
+  //         if (this.state.order === "ascend") {
+  //           // account for missing values
+  //           if (a[heading] === undefined) {
+  //             return 1;
+  //           } else if (b[heading] === undefined) {
+  //             return -1;
+  //           }
+  //           // numerically
+  //           else if (heading === "name") {
+  //             return a[heading].first.localeCompare(b[heading].first);
+  //           } else {
+  //             return a[heading] - b[heading];
+  //           }
+  //         } else {
+  //           // account for missing values
+  //           if (a[heading] === undefined) {
+  //             return 1;
+  //           } else if (b[heading] === undefined) {
+  //             return -1;
+  //           }
+  //           // numerically
+  //           else if (heading === "name") {
+  //             return b[heading].first.localeCompare(a[heading].first);
+  //           } else {
+  //             return b[heading] - a[heading];
+  //           }
+  //         }
 
-//         }
-//         const sortedUsers = this.state.filteredUsers.sort(compareFnc);
-//         this.setState({ filteredUsers: sortedUsers });
-//       },
-//       handleSearchChange: event => {
-//         console.log(event.target.value);
-//         const filter = event.target.value;
-//         const filteredList = this.state.users.filter(item => {
-//           // merge data together, then see if user input is anywhere inside
-//           let values = Object.values(item)
-//             .join("")
-//             .toLowerCase();
-//           return values.indexOf(filter.toLowerCase()) !== -1;
-//         });
-//         this.setState({ filteredUsers: filteredList });
-//       }
-//     };
-//   }
+  //       }
+  //       const sortedUsers = this.state.filteredUsers.sort(compareFnc);
+  //       this.setState({ filteredUsers: sortedUsers });
+  //     },
+  //     handleSearchChange: event => {
+  //       console.log(event.target.value);
+  //       const filter = event.target.value;
+  //       const filteredList = this.state.users.filter(item => {
+  //         // merge data together, then see if user input is anywhere inside
+  //         let values = Object.values(item)
+  //           .join("")
+  //           .toLowerCase();
+  //         return values.indexOf(filter.toLowerCase()) !== -1;
+  //       });
+  //       this.setState({ filteredUsers: filteredList });
+  //     }
+  //   };
+  // }
 
 //   componentDidMount() {
 //     API.getUsers().then(results => {
