@@ -4,12 +4,12 @@ import Nav from "./Nav";
 import API from "../utils/API";
 import "../styles/DataArea.css";
 import EmpContext from "../utils/EmpContext";
-import { deepStrictEqual } from "assert";
+//import { deepStrictEqual } from "assert";
 
 function DataArea() {
-  
+
   const [developerState, setDeveloperState] = useState({
-    users: "",
+    users: [{}],
     order: "decend",
     filteredUsers: [{}],
     headings: [
@@ -18,82 +18,86 @@ function DataArea() {
       { name: "Phone", width: "20%" },
       { name: "Email", width: "20%" },
       { name: "DOB", width: "10%" }
-    ],
-    handleSort: heading => {
-
-      if (developerState.order === "descend") {
-        setDeveloperState({...developerState,order : "ascend"})
-      } else {
-        setDeveloperState({...developerState,order : "descend"})
-      }
-
-      const compareFnc = (a, b) => {
-        if (developerState.order === "ascend") {
-          // account for missing values
-          if (a[heading] === undefined) {
-            return 1;
-          } else if (b[heading] === undefined) {
-            return -1;
-          }
-          // numerically
-          else if (heading === "name") {
-            return a[heading].first.localeCompare(b[heading].first);
-          } else {
-            return a[heading] - b[heading];
-          }
-        } else {
-          // account for missing values
-          if (a[heading] === undefined) {
-            return 1;
-          } else if (b[heading] === undefined) {
-            return -1;
-          }
-          // numerically
-          else if (heading === "name") {
-            return b[heading].first.localeCompare(a[heading].first);
-          } else {
-            return b[heading] - a[heading];
-          }
-        }
-
-      }
-      const sortedUsers = developerState.filteredUsers.sort(compareFnc);
-      setDeveloperState({...developerState,filteredUsers : sortedUsers});
-    },
-
-    handleSearchChange: event => {
-      console.log(event.target.value);
-      const filter = event.target.value;
-      const filteredList = developerState.users.filter(item => {
-        // merge data together, then see if user input is anywhere inside
-        let values = Object.values(item)
-          .join("")
-          .toLowerCase();
-        return values.indexOf(filter.toLowerCase()) !== -1;
-      });
-      setDeveloperState({...developerState,filteredUsers : filteredList});
-    }
+    ]
   });
 
+  function handleSort(heading) {
+
+    if (developerState.order === "descend") {
+      setDeveloperState({ ...developerState, order: "ascend" })
+    } else {
+      setDeveloperState({ ...developerState, order: "descend" })
+    }
+
+    const compareFnc = (a, b) => {
+      if (developerState.order === "ascend") {
+        // account for missing values
+        if (a[heading] === undefined) {
+          return 1;
+        } else if (b[heading] === undefined) {
+          return -1;
+        }
+        // numerically
+        else if (heading === "name") {
+          return a[heading].first.localeCompare(b[heading].first);
+        } else {
+          return a[heading] - b[heading];
+        }
+      } else {
+        // account for missing values
+        if (a[heading] === undefined) {
+          return 1;
+        } else if (b[heading] === undefined) {
+          return -1;
+        }
+        // numerically
+        else if (heading === "name") {
+          return b[heading].first.localeCompare(a[heading].first);
+        } else {
+          return b[heading] - a[heading];
+        }
+      }
+
+    }
+    const sortedUsers = developerState.filteredUsers.sort(compareFnc);
+    setDeveloperState({ ...developerState, filteredUsers: sortedUsers });
+  }
+
+  function handleSearchChange (event) {
+    console.log("HANDLESEARCHCHANGE ARGUMENT", event.target.value);
+    const filter = event.target.value;
+    const filteredList = developerState.users.filter(item => {
+      // merge data together, then see if user input is anywhere inside
+      //console.log("item", item);
+
+      let values = Object.values(item)
+        .join("")
+        .toLowerCase();
+
+      return values.indexOf(filter.toLowerCase()) !== -1;
+    });
+    console.log("FILTER", filteredList);
+    setDeveloperState({ ...developerState, filteredUsers: filteredList });
+  }
 
 useEffect(() => {
-    API.getUsers().then(results => {
-      setDeveloperState({...developerState,users : results.data.results, filteredUsers : results.data.results})
-    });
-  }, []);
+  API.getUsers().then(results => {
+    setDeveloperState({ ...developerState, users: results.data.results, filteredUsers: results.data.results })
+  });
+}, []);
 
-  return (
-    <>
-      <EmpContext.Provider value={{developerState}} >
-        <Nav />
-        <div className="data-area">
-          <DataTable
-            
-          />
-        </div>
-      </EmpContext.Provider>
-    </>
-  );
+return (
+  <>
+    <EmpContext.Provider value={{ developerState, handleSort, handleSearchChange }} >
+      <Nav />
+      <div className="data-area">
+        <DataTable
+
+        />
+      </div>
+    </EmpContext.Provider>
+  </>
+);
 
 }
 

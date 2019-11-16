@@ -5,8 +5,9 @@ import EmpContext from "../utils/EmpContext";
 
 function DataTable() {
 
-  const {developerState} = useContext(EmpContext);
-  //console.log("datatable", developerState);
+  const {developerState, handleSort} = useContext(EmpContext);
+  // console.log("datatable", developerState);
+  // console.log("handlesort", handleSort)
   return (
     // <div>
     //   <h1>hello</h1>
@@ -25,7 +26,7 @@ function DataTable() {
                   key={name}
                   style={{width}}
                   onClick={() => {
-                    developerState.handleSort(name.toLowerCase());
+                    handleSort(name.toLowerCase());
                   }}
                 >
                   {name}

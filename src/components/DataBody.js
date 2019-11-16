@@ -5,9 +5,9 @@ import EmpContext from "../utils/EmpContext"
 
 function DataBody() {
 
-  const { employee } = useContext(EmpContext);
+  const {developerState} = useContext(EmpContext);
 
-  console.log("databody", employee);
+  //console.log("databody", employee.developerState.users);
 
   function formatDate(date) {
     const dateArray = date.split("-");
@@ -21,8 +21,8 @@ function DataBody() {
 
   return (
     <tbody>
-      {employee.users[0] !== undefined && employee.users[0].name !== undefined ? (
-        employee.users.map(({ login, name, picture, phone, email, dob }) => {
+      {developerState.users[0] !== undefined && developerState.users[0].name !== undefined ? (
+        developerState.users.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
               <td data-th="Image" className="align-middle">
