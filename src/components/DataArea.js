@@ -64,7 +64,7 @@ function DataArea() {
   }
 
   function handleSearchChange (event) {
-    console.log("HANDLESEARCHCHANGE ARGUMENT", event.target.value);
+    //console.log("HANDLESEARCHCHANGE ARGUMENT", event.target.value);
     const filter = event.target.value;
     const filteredList = developerState.users.filter(item => {
       // merge data together, then see if user input is anywhere inside

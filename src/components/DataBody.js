@@ -21,8 +21,8 @@ function DataBody() {
 
   return (
     <tbody>
-      {developerState.users[0] !== undefined && developerState.users[0].name !== undefined ? (
-        developerState.users.map(({ login, name, picture, phone, email, dob }) => {
+      {developerState.filteredUsers[0] !== undefined && developerState.filteredUsers[0].name !== undefined ? (
+        developerState.filteredUsers.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
               <td data-th="Image" className="align-middle">
