@@ -9,9 +9,6 @@ function DataTable() {
   // console.log("datatable", developerState);
   // console.log("handlesort", handleSort)
   return (
-    // <div>
-    //   <h1>hello</h1>
-    // </div>
     <div className="datatable mt-5">
       <table
         id="table"
