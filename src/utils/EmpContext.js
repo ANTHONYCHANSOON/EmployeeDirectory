@@ -2,7 +2,7 @@ import React from "react";
 
 const EmpContext = React.createContext ({
     users: [{}],
-    order: "decend",
+    order: "",
     filteredUsers: [{}],
     headings: [
       { name: "Image", width: "10%" },

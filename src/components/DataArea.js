@@ -10,7 +10,7 @@ function DataArea() {
 
   const [developerState, setDeveloperState] = useState({
     users: [{}],
-    order: "decend",
+    order: "descend",
     filteredUsers: [{}],
     headings: [
       { name: "Image", width: "10%" },
@@ -21,13 +21,21 @@ function DataArea() {
     ]
   });
 
-  function handleSort(heading) {
+
+  const handleSort = heading => {
+
+    // console.log(developerState.order)
+    // console.log(heading);
 
     if (developerState.order === "descend") {
       setDeveloperState({ ...developerState, order: "ascend" })
+     console.log("order", developerState.order);
     } else {
       setDeveloperState({ ...developerState, order: "descend" })
+      console.log("order", developerState.order);
     }
+
+    console.log("order", developerState.order);
 
     const compareFnc = (a, b) => {
       if (developerState.order === "ascend") {
@@ -76,13 +84,14 @@ function DataArea() {
 
       return values.indexOf(filter.toLowerCase()) !== -1;
     });
-    console.log("FILTER", filteredList);
+    //console.log("FILTER", filteredList);
     setDeveloperState({ ...developerState, filteredUsers: filteredList });
   }
 
 useEffect(() => {
   API.getUsers().then(results => {
     setDeveloperState({ ...developerState, users: results.data.results, filteredUsers: results.data.results })
+    console.log("order", developerState.order);
   });
 }, []);
 
