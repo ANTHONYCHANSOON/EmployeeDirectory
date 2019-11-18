@@ -27,15 +27,14 @@ function DataArea() {
     // console.log(developerState.order)
     // console.log(heading);
 
-    if (developerState.order === "descend") {
-      setDeveloperState({ ...developerState, order: "ascend" })
-     console.log("order", developerState.order);
-    } else {
-      setDeveloperState({ ...developerState, order: "descend" })
-      console.log("order", developerState.order);
-    }
 
-    console.log("order", developerState.order);
+    console.log(developerState.order);
+    const newState = { ...developerState };
+    if (newState.order === "descend") {
+      newState.order = "ascend";
+    } else {
+      newState.order = "descend";
+    }
 
     const compareFnc = (a, b) => {
       if (developerState.order === "ascend") {
@@ -44,10 +43,16 @@ function DataArea() {
           return 1;
         } else if (b[heading] === undefined) {
           return -1;
-        }
-        // numerically
-        else if (heading === "name") {
+        } else if (heading === "dob") {
+          return a[heading].age < b[heading].age ? 1 : -1;
+        } else if (heading === "email") {
+          return a[heading].charAt(0).localeCompare(b[heading].charAt(0));
+        } else if (heading === "name") {
           return a[heading].first.localeCompare(b[heading].first);
+        } else if (heading === "phone") {
+          return b[heading].replace(/\D/g, "") < a[heading].replace(/\D/g, "")
+            ? 1
+            : -1;
         } else {
           return a[heading] - b[heading];
         }
@@ -57,19 +62,70 @@ function DataArea() {
           return 1;
         } else if (b[heading] === undefined) {
           return -1;
-        }
-        // numerically
-        else if (heading === "name") {
+        } else if (heading === "dob") {
+          return a[heading].age > b[heading].age ? 1 : -1;
+        } else if (heading === "email") {
+          return b[heading].charAt(0).localeCompare(a[heading].charAt(0));
+        } else if (heading === "name") {
           return b[heading].first.localeCompare(a[heading].first);
+        } else if (heading === "phone") {
+          return b[heading].replace(/\D/g, "") > a[heading].replace(/\D/g, "")
+            ? 1
+            : -1;
         } else {
           return b[heading] - a[heading];
         }
       }
-
-    }
+    };
     const sortedUsers = developerState.filteredUsers.sort(compareFnc);
-    setDeveloperState({ ...developerState, filteredUsers: sortedUsers });
-  }
+    setDeveloperState({
+      ...newState,
+      filteredUsers: sortedUsers
+    });
+  };
+    // if (developerState.order === "descend") {
+    //   setDeveloperState({ ...developerState, order: "ascend" })
+    //  console.log("order", developerState.order);
+    // } else {
+    //   setDeveloperState({ ...developerState, order: "descend" })
+    //   console.log("order", developerState.order);
+    // }
+
+  //   console.log("order", developerState.order);
+
+  //   const compareFnc = (a, b) => {
+  //     if (developerState.order === "ascend") {
+  //       // account for missing values
+  //       if (a[heading] === undefined) {
+  //         return 1;
+  //       } else if (b[heading] === undefined) {
+  //         return -1;
+  //       }
+  //       // numerically
+  //       else if (heading === "name") {
+  //         return a[heading].first.localeCompare(b[heading].first);
+  //       } else {
+  //         return a[heading] - b[heading];
+  //       }
+  //     } else {
+  //       // account for missing values
+  //       if (a[heading] === undefined) {
+  //         return 1;
+  //       } else if (b[heading] === undefined) {
+  //         return -1;
+  //       }
+  //       // numerically
+  //       else if (heading === "name") {
+  //         return b[heading].first.localeCompare(a[heading].first);
+  //       } else {
+  //         return b[heading] - a[heading];
+  //       }
+  //     }
+
+  //   }
+  //   const sortedUsers = developerState.filteredUsers.sort(compareFnc);
+  //   setDeveloperState({ ...developerState, filteredUsers: sortedUsers });
+  // }
 
   function handleSearchChange (event) {
     //console.log("HANDLESEARCHCHANGE ARGUMENT", event.target.value);
